@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: smallsquare_plus
+
+  config:
+    import:
+      - optional:file:.env
