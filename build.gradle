@@ -38,7 +38,9 @@ dependencies {
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4'
     testImplementation 'org.springframework.batch:spring-batch-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.11.0") // 배포 전 삭제 요망
 }
 
 tasks.named('test') {
