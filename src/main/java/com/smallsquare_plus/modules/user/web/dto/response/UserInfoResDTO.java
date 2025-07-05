@@ -1,23 +1,18 @@
-package com.smallsquare_plus.modules.user.domain.entity;
+package com.smallsquare_plus.modules.user.web.dto.response;
 
 import com.smallsquare_plus.modules.user.domain.enums.IsActive;
 import com.smallsquare_plus.modules.user.domain.enums.Role;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class User {
+public class UserInfoResDTO {
 
     private Long userId;
     private String username;
-    private String password;
     private String nickname;
     private String email;
     private String name;

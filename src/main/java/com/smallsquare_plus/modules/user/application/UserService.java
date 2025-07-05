@@ -1,5 +1,6 @@
 package com.smallsquare_plus.modules.user.application;
 
+import com.smallsquare_plus.modules.user.web.dto.response.UserInfoResDTO;
 import com.smallsquare_plus.modules.user.web.dto.request.UserLoginReqDTO;
 import com.smallsquare_plus.modules.user.web.dto.request.UserLogoutReqDTO;
 import com.smallsquare_plus.modules.user.web.dto.request.UserSignupReqDTO;
@@ -12,4 +13,6 @@ public interface UserService {
     UserLoginResDTO login(UserLoginReqDTO reqDTO);
 
     void logout(UserLogoutReqDTO reqDTO);
+
+    UserInfoResDTO me(Long userId);
 }

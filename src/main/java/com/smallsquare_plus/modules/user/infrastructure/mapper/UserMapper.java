@@ -1,6 +1,7 @@
 package com.smallsquare_plus.modules.user.infrastructure.mapper;
 
 import com.smallsquare_plus.modules.user.domain.entity.User;
+import com.smallsquare_plus.modules.user.domain.enums.Role;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
@@ -17,4 +18,8 @@ public interface UserMapper {
     String getPasswordByUsername(String username);
 
     Long getUserIdByUsername(String username);
+
+    Role getRoleByUserId(Long userId);
+
+    User getUserInfoByUserId(Long userId);
 }

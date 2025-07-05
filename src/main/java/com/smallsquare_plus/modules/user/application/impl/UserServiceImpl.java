@@ -9,10 +9,8 @@ import com.smallsquare_plus.modules.user.infrastructure.jwt.JwtUtil;
 import com.smallsquare_plus.modules.user.infrastructure.mapper.UserMapper;
 import com.smallsquare_plus.modules.user.infrastructure.redis.RedisService;
 import com.smallsquare_plus.modules.user.utils.UserUtils;
-import com.smallsquare_plus.modules.user.web.dto.request.JwtTokenReqDTO;
-import com.smallsquare_plus.modules.user.web.dto.request.UserLoginReqDTO;
-import com.smallsquare_plus.modules.user.web.dto.request.UserLogoutReqDTO;
-import com.smallsquare_plus.modules.user.web.dto.request.UserSignupReqDTO;
+import com.smallsquare_plus.modules.user.web.dto.request.*;
+import com.smallsquare_plus.modules.user.web.dto.response.UserInfoResDTO;
 import com.smallsquare_plus.modules.user.web.dto.response.UserLoginResDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,10 +63,11 @@ public class UserServiceImpl implements UserService {
         // 1. username & password 일치 여부 확인
         userUtils.validateLogin(reqDTO.getUsername(), reqDTO.getPassword());
         Long userId = userMapper.getUserIdByUsername(reqDTO.getUsername());
+        Role role = userMapper.getRoleByUserId(userId);
 
         // 2. 토큰 생성
-        String accessToken= jwtProvider.createAccessToken(userId, reqDTO.getUsername());
-        String refreshToken = jwtProvider.createRefreshToken(userId, reqDTO.getUsername());
+        String accessToken= jwtProvider.createAccessToken(userId, reqDTO.getUsername(), role);
+        String refreshToken = jwtProvider.createRefreshToken(userId, reqDTO.getUsername(), role);
 
         // 3. 반환
         return UserLoginResDTO.builder()
@@ -91,5 +90,27 @@ public class UserServiceImpl implements UserService {
 
         // 3. RedisService에서 Role에 블랙리스트 저장
         redisService.saveBlacklist(accessToken, remainTimeAccessToken, refreshToken, remainTimeRefreshToken);
+    }
+
+    @Override
+    public UserInfoResDTO me(Long userId) {
+
+        // 1. User 객체 생성 및 검증
+        User user = userMapper.getUserInfoByUserId(userId);
+        userUtils.validateUserIsActive(user.getIsActive());
+
+        // 2. 반환
+        return UserInfoResDTO.builder()
+                .userId(user.getUserId())
+                .username(user.getUsername())
+                .nickname(user.getNickname())
+                .email(user.getEmail())
+                .name(user.getName())
+                .isActive(user.getIsActive())
+                .role(user.getRole())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
+                .build();
+
     }
 }

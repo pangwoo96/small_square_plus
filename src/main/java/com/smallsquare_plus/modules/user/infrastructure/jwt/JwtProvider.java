@@ -1,5 +1,6 @@
 package com.smallsquare_plus.modules.user.infrastructure.jwt;
 
+import com.smallsquare_plus.modules.user.domain.enums.Role;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -19,6 +20,7 @@ public class JwtProvider {
 
     private static final String USERNAME = "username";
     private static final String TYPE = "type";
+    private static final String ROLE = "role";
 
     @Value("${JWT_ACCESS_EXPIRATION}")
     private Long accessTokenExpiration;
@@ -35,24 +37,25 @@ public class JwtProvider {
         this.jwtParser = Jwts.parser().verifyWith(secretKey).build();
     }
 
-    public String createToken(Long userId, String username, Long expiredMs, String type) {
+    public String createToken(Long userId, String username, Role role, Long expiredMs, String type) {
         Date now = new Date();
         return Jwts.builder()
                 .subject(String.valueOf(userId))
                 .claim(USERNAME, username)
                 .claim(TYPE, type)
+                .claim(ROLE, role)
                 .issuedAt(now)
                 .expiration(new Date(now.getTime() + expiredMs))
                 .signWith(secretKey)
                 .compact();
     }
 
-    public String createAccessToken(Long userId, String username) {
-        return createToken(userId, username, accessTokenExpiration, "accessToken");
+    public String createAccessToken(Long userId, String username, Role role) {
+        return createToken(userId, username, role, accessTokenExpiration, "accessToken");
     }
 
-    public String createRefreshToken(Long userId, String username) {
-        return createToken(userId, username, refreshTokenExpiration, "refreshToken");
+    public String createRefreshToken(Long userId, String username, Role role) {
+        return createToken(userId, username, role, refreshTokenExpiration, "refreshToken");
     }
 
 }

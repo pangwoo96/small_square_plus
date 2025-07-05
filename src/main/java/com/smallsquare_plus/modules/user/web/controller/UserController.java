@@ -1,19 +1,17 @@
 package com.smallsquare_plus.modules.user.web.controller;
 
 import com.smallsquare_plus.modules.user.application.UserService;
+import com.smallsquare_plus.modules.user.infrastructure.auth.model.CustomUserDetails;
+import com.smallsquare_plus.modules.user.web.dto.response.UserInfoResDTO;
 import com.smallsquare_plus.modules.user.web.dto.request.UserLoginReqDTO;
 import com.smallsquare_plus.modules.user.web.dto.request.UserLogoutReqDTO;
 import com.smallsquare_plus.modules.user.web.dto.request.UserSignupReqDTO;
 import com.smallsquare_plus.modules.user.web.dto.response.UserLoginResDTO;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,5 +36,11 @@ public class UserController {
     public ResponseEntity<Void> logout(@RequestBody UserLogoutReqDTO reqDTO) {
         userService.logout(reqDTO);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<UserInfoResDTO> me(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        UserInfoResDTO resDTO = userService.me(userDetails.getUserId());
+        return ResponseEntity.status(HttpStatus.OK).body(resDTO);
     }
 }

@@ -31,12 +31,21 @@
             SELECT 1 FROM users WHERE email = #{email}
         )
     </select>
+
     <select id="getPasswordByUsername" parameterType="string" resultType="java.lang.String">
         SELECT password FROM users where username = #{username}
     </select>
 
-    <select id="getUserIdByUsername" resultType="java.lang.Long">
+    <select id="getUserIdByUsername" parameterType="string" resultType="java.lang.Long">
         SELECT user_id FROM users WHERE username = #{username}
+    </select>
+
+    <select id="getRoleByUserId" parameterType="long" resultType="com.smallsquare_plus.modules.user.domain.enums.Role">
+        SELECT role FROM users WHERE user_id = #{user_id}
+    </select>
+
+    <select id="getUserInfoByUserId" parameterType="long" resultType="com.smallsquare_plus.modules.user.domain.entity.User">
+        SELECT * FROM users WHERE user_id = #{user_id}
     </select>
 
 </mapper>

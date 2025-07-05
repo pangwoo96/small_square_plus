@@ -28,7 +28,9 @@ public enum UserErrorCode {
     NAME_WRONG_PATTERN("이름은 한글과 영어를 섞으면 안되고 최대 30자까지 작성 가능합니다.", HttpStatus.BAD_REQUEST),
 
     ACCESS_TOKEN_EXPIRED("Access Token이 만료되었습니다.", HttpStatus.BAD_REQUEST),
-    REFRESH_TOKEN_EXPIRED("Refresh Token이 만료되었습니다.", HttpStatus.BAD_REQUEST);
+    REFRESH_TOKEN_EXPIRED("Refresh Token이 만료되었습니다.", HttpStatus.BAD_REQUEST),
+
+    USER_INACTIVE("계정이 비활성화된 회원입니다.", HttpStatus.BAD_REQUEST);
 
     private final String message;
     private final HttpStatus status;

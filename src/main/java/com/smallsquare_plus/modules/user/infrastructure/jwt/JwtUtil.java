@@ -47,6 +47,10 @@ public class JwtUtil {
         return parseAllClaims(token).get("username", String.class);
     }
 
+    public String getRole(String token) {
+        return parseAllClaims(token).get("role", String.class);
+    }
+
     // 토큰 발급시간(IssuedAt) 추출
     public Date getIssuedAt(String token) {
         return parseAllClaims(token).getIssuedAt();
