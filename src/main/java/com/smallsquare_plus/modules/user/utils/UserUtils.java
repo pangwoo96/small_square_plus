@@ -4,6 +4,7 @@ import com.smallsquare_plus.modules.user.exception.exception.UserException;
 import com.smallsquare_plus.modules.user.infrastructure.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static com.smallsquare_plus.modules.user.domain.consts.UserConst.*;
@@ -19,6 +20,7 @@ import static com.smallsquare_plus.modules.user.exception.errorcode.UserErrorCod
 public class UserUtils {
 
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * username 검증 메소드
@@ -104,6 +106,14 @@ public class UserUtils {
         if (!name.matches(KOREAN_NAME_REGEX) && !name.matches(ENGLISH_NAME_REGEX)) {
             log.info("name wrong pattern: {}", name);
             throw new UserException(NAME_WRONG_PATTERN);
+        }
+    }
+
+    public void validateLogin(String username, String password) {
+
+        String savedPassword = userMapper.getPasswordByUsername(username);
+        if (!passwordEncoder.matches(password, savedPassword)) {
+            throw new UserException(PASSWORD_NOT_EQUAL);
         }
     }
 }

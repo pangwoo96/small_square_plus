@@ -13,4 +13,8 @@ public interface UserMapper {
     Boolean existsByNickname(String nickname);
 
     Boolean existsByEmail(String email);
+
+    String getPasswordByUsername(String username);
+
+    Long getUserIdByUsername(String username);
 }
