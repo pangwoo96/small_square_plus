@@ -1,5 +1,7 @@
 package com.smallsquare_plus.infrastructure.config.security;
 
+import com.smallsquare_plus.modules.user.infrastructure.auth.filter.JwtFilter;
+import com.smallsquare_plus.modules.user.infrastructure.jwt.JwtUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +33,7 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 @EnableWebSecurity
 public class SecurityConfig {
 
-    //private final JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -39,7 +41,7 @@ public class SecurityConfig {
         configureBasicSecurity(http);
 
         // JWT 필터 설정
-        //configureJwtFilter(http);
+        configureJwtFilter(http);
 
         // 예외 처리 설정
         configureExceptionHandling(http);
@@ -98,6 +100,11 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.disable());
     }
 
+    // JWT 필터 설정 추가
+    private void configureJwtFilter(HttpSecurity http) throws Exception {
+        http.addFilterBefore(new JwtFilter(jwtUtil),
+                UsernamePasswordAuthenticationFilter.class);
+    }
 
     // 인증/인가 예외 처리
     private void configureExceptionHandling(HttpSecurity http) throws Exception {
@@ -123,12 +130,11 @@ public class SecurityConfig {
     // 인증 없이 접근 가능한 URL 패턴
     private RequestMatcher[] permitAllRequestMatchers() {
         List<RequestMatcher> requestMatchers = List.of(
-                antMatcher(POST, "/api/user/"),
+                antMatcher("/api/users/"),
                 antMatcher("/swagger-ui/**"),
                 antMatcher("/swagger-ui.html"),
                 antMatcher("/v3/api-docs/**"),
-                antMatcher("/api-docs/**"),
-                antMatcher("/api/user/")
+                antMatcher("/api-docs/**")
         );
         return requestMatchers.toArray(RequestMatcher[]::new);
     }
