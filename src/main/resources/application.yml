@@ -5,3 +5,21 @@ spring:
   config:
     import:
       - optional:file:.env
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/small_square_plus_db
+    username: postgres
+    password: postgres
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+server:
+  servlet:
+    context-path: /api
+
+logging:
+  level:
+    root: info
+    com.smallsquare_plus: debug
