@@ -53,4 +53,10 @@ public class UserController {
         UserUpdateResDTO resDTO = userService.updateMe(userDetails.getUserId(), reqDTO);
         return ResponseEntity.status(HttpStatus.OK).body(resDTO);
     }
+
+    @DeleteMapping("/")
+    public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody UserLogoutReqDTO reqDTO) {
+        userService.deleteMe(userDetails.getUserId(), reqDTO);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

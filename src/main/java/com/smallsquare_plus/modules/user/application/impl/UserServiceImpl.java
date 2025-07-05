@@ -144,4 +144,18 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    @Override
+    @Transactional
+    public void deleteMe(Long userId, UserLogoutReqDTO reqDTO) {
+
+        // 1. is_active = "INACTIVE" update
+        int updatedRow = userMapper.deleteMe(userId);
+
+        // 2. 업데이트 호출 검증
+        userUtils.validateDeleteMe(updatedRow);
+
+        // 3. logout 호출
+        logout(reqDTO);
+    }
+
 }
