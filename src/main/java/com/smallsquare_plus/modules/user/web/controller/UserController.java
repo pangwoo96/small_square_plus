@@ -2,6 +2,7 @@ package com.smallsquare_plus.modules.user.web.controller;
 
 import com.smallsquare_plus.modules.user.application.UserService;
 import com.smallsquare_plus.modules.user.web.dto.request.UserLoginReqDTO;
+import com.smallsquare_plus.modules.user.web.dto.request.UserLogoutReqDTO;
 import com.smallsquare_plus.modules.user.web.dto.request.UserSignupReqDTO;
 import com.smallsquare_plus.modules.user.web.dto.response.UserLoginResDTO;
 import lombok.RequiredArgsConstructor;
@@ -31,5 +32,11 @@ public class UserController {
     public ResponseEntity<UserLoginResDTO> login(@RequestBody UserLoginReqDTO reqDTO) {
         UserLoginResDTO resDto = userService.login(reqDTO);
         return ResponseEntity.status(HttpStatus.OK).body(resDto);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestBody UserLogoutReqDTO reqDTO) {
+        userService.logout(reqDTO);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
