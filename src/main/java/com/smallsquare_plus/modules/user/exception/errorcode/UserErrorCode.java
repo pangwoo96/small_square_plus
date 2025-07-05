@@ -14,6 +14,7 @@ public enum UserErrorCode {
 
     PASSWORD_NOT_NULL("비밀번호는 필수값입니다.", HttpStatus.BAD_REQUEST),
     PASSWORD_WRONG_PATTERN("비밀번호는 영문자, 숫자, 특수문자를 반드시 포함해야하며 8자 이상만 가능합니다.", HttpStatus.BAD_REQUEST),
+    PASSWORD_NOT_EQUAL("비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
 
     NICKNAME_NOT_NULL("닉네임은 필수값입니다.", HttpStatus.BAD_REQUEST),
     NICKNAME_WRONG_PATTERN("닉네임은 3글자 이상, 15글자 이내만 가능합니다.", HttpStatus.BAD_REQUEST),

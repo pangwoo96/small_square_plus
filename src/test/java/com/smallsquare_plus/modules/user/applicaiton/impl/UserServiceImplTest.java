@@ -2,9 +2,12 @@ package com.smallsquare_plus.modules.user.applicaiton.impl;
 
 import com.smallsquare_plus.modules.user.application.impl.UserServiceImpl;
 import com.smallsquare_plus.modules.user.domain.entity.User;
+import com.smallsquare_plus.modules.user.infrastructure.jwt.JwtProvider;
 import com.smallsquare_plus.modules.user.infrastructure.mapper.UserMapper;
 import com.smallsquare_plus.modules.user.utils.UserUtils;
+import com.smallsquare_plus.modules.user.web.dto.request.UserLoginReqDTO;
 import com.smallsquare_plus.modules.user.web.dto.request.UserSignupReqDTO;
+import com.smallsquare_plus.modules.user.web.dto.response.UserLoginResDTO;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -18,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -34,6 +38,9 @@ public class UserServiceImplTest {
 
     @Mock
     private UserUtils userUtils;
+
+    @Mock
+    private JwtProvider jwtProvider;
 
     private UserSignupReqDTO createUserSignupReqDto() {
         return UserSignupReqDTO.builder()
@@ -58,7 +65,37 @@ public class UserServiceImplTest {
         Long savedUserId = userService.signup(reqDTO);
 
         //then
+        verify(userUtils).validateUsername(reqDTO.getUsername());
+        verify(userUtils).validatePassword(reqDTO.getPassword());
+        verify(userUtils).validateNickname(reqDTO.getNickname());
+        verify(userUtils).validateEmail(reqDTO.getEmail());
+        verify(userUtils).validateName(reqDTO.getName());
+
         assertThat(savedUserId).isEqualTo(1L);
+    }
+
+    @Test
+    @Order(2)
+    void 로그인_성공() {
+
+        //given
+        UserLoginReqDTO reqDTO = UserLoginReqDTO.builder()
+                .username("testUsername")
+                .password("testPassword!")
+                .build();
+
+        given(userMapper.getUserIdByUsername(reqDTO.getUsername())).willReturn(1L);
+        given(jwtProvider.createAccessToken(1L, reqDTO.getUsername())).willReturn("testAccessToken");
+        given(jwtProvider.createRefreshToken(1L, reqDTO.getUsername())).willReturn("testRefreshToken");
+
+        //when
+        UserLoginResDTO resDTO = userService.login(reqDTO);
+
+        //then
+        verify(userUtils).validateLogin(reqDTO.getUsername(), reqDTO.getPassword());
+
+        assertThat(resDTO.getAccessToken()).isEqualTo("testAccessToken");
+        assertThat(resDTO.getRefreshToken()).isEqualTo("testRefreshToken");
     }
 
 
