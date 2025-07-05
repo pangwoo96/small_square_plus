@@ -43,6 +43,9 @@ dependencies {
     implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.11.0") //p6spy: 배포 전 삭제 요망
     testImplementation 'org.springframework.boot:spring-boot-starter-test' // TEST
     testImplementation 'org.mockito:mockito-core' // TEST Mockito
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.6' // JWT
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6' // JWT
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.6' // JACKSON
 }
 
 tasks.named('test') {
