@@ -12,6 +12,7 @@ import com.smallsquare_plus.modules.user.utils.UserUtils;
 import com.smallsquare_plus.modules.user.web.dto.request.*;
 import com.smallsquare_plus.modules.user.web.dto.response.UserInfoResDTO;
 import com.smallsquare_plus.modules.user.web.dto.response.UserLoginResDTO;
+import com.smallsquare_plus.modules.user.web.dto.response.UserUpdateResDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -113,4 +114,34 @@ public class UserServiceImpl implements UserService {
                 .build();
 
     }
+
+    @Override
+    public UserUpdateResDTO updateMe(Long userId, UserUpdateReqDTO reqDTO) {
+
+        // 1. Request 값 검증
+        userUtils.validateUsername(reqDTO.getUsername());
+        userUtils.validateNickname(reqDTO.getNickname());
+        userUtils.validateEmail(reqDTO.getEmail());
+        userUtils.validateName(reqDTO.getName());
+
+        // 2. 정보 수정
+        userMapper.updateUserInfo(userId, reqDTO);
+
+        // 3. 수정된 User 재조회
+        User newUser = userMapper.getUserInfoByUserId(userId);
+
+        // 4. 반환
+        return UserUpdateResDTO.builder()
+                .userId(newUser.getUserId())
+                .username(newUser.getUsername())
+                .nickname(newUser.getNickname())
+                .email(newUser.getEmail())
+                .name(newUser.getName())
+                .isActive(newUser.getIsActive())
+                .role(newUser.getRole())
+                .createdAt(newUser.getCreatedAt())
+                .updatedAt(newUser.getUpdatedAt())
+                .build();
+    }
+
 }

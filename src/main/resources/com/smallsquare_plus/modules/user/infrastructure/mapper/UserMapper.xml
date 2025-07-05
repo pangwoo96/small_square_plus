@@ -14,21 +14,31 @@
         RETURNING user_id
     </insert>
 
+    <update id="updateUserInfo" parameterType="map">
+        UPDATE users SET
+        username = #{reqDTO.username},
+        nickname = #{reqDTO.nickname},
+        email = #{reqDTO.email},
+        name = #{reqDTO.name},
+        updated_at = CURRENT_TIMESTAMP
+        WHERE user_id = #{userId} AND is_active != 'INACTIVE'
+    </update>
+
     <select id="existsByUsername" parameterType="string" resultType="boolean">
         SELECT EXISTS (
-            SELECT 1 FROM users WHERE username = #{username}
+        SELECT 1 FROM users WHERE username = #{username}
         )
     </select>
 
     <select id="existsByNickname" parameterType="string" resultType="java.lang.Boolean">
         SELECT EXISTS (
-            SELECT 1 FROM users WHERE nickname = #{nickname}
+        SELECT 1 FROM users WHERE nickname = #{nickname}
         )
     </select>
 
     <select id="existsByEmail" parameterType="string" resultType="java.lang.Boolean">
         SELECT EXISTS (
-            SELECT 1 FROM users WHERE email = #{email}
+        SELECT 1 FROM users WHERE email = #{email}
         )
     </select>
 
@@ -44,8 +54,9 @@
         SELECT role FROM users WHERE user_id = #{user_id}
     </select>
 
-    <select id="getUserInfoByUserId" parameterType="long" resultType="com.smallsquare_plus.modules.user.domain.entity.User">
-        SELECT * FROM users WHERE user_id = #{user_id}
+    <select id="getUserInfoByUserId" parameterType="long"
+            resultType="com.smallsquare_plus.modules.user.domain.entity.User">
+        SELECT * FROM users WHERE user_id = #{user_id} AND is_active != 'INACTIVE'
     </select>
 
 </mapper>
