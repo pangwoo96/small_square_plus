@@ -124,4 +124,11 @@ public class UserUtils {
             throw new UserException(USER_INACTIVE);
         }
     }
+
+    public void validateDeleteMe(int updatedRow) {
+        if (updatedRow == 0) {
+            log.info("updated user failed");
+            throw new UserException(UPDATE_USER_FAIL);
+        }
+    }
 }

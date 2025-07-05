@@ -30,7 +30,8 @@ public enum UserErrorCode {
     ACCESS_TOKEN_EXPIRED("Access Token이 만료되었습니다.", HttpStatus.BAD_REQUEST),
     REFRESH_TOKEN_EXPIRED("Refresh Token이 만료되었습니다.", HttpStatus.BAD_REQUEST),
 
-    USER_INACTIVE("계정이 비활성화된 회원입니다.", HttpStatus.BAD_REQUEST);
+    USER_INACTIVE("계정이 비활성화된 회원입니다.", HttpStatus.BAD_REQUEST),
+    UPDATE_USER_FAIL("회원 정보 수정이 실패했습니다.", HttpStatus.BAD_REQUEST);
 
     private final String message;
     private final HttpStatus status;

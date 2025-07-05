@@ -26,4 +26,6 @@ public interface UserMapper {
     Role getRoleByUserId(Long userId);
 
     int updateUserInfo(@Param("userId") Long userId, @Param("reqDTO") UserUpdateReqDTO reqDTO);
+
+    int deleteMe(Long userId);
 }

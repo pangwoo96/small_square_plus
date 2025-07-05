@@ -229,4 +229,31 @@ public class UserServiceImplTest {
         assertThat(resDTO.getName()).isEqualTo(reqDTO.getName());
     }
 
+    @Test
+    @Order(6)
+    void 회원탈퇴_성공() {
+
+        // given
+        long userId = 1L;
+        User user = createUser(userId);
+
+        UserLogoutReqDTO reqDTO = UserLogoutReqDTO.builder()
+                .accessToken("testAccessToken")
+                .refreshToken("testRefreshToken")
+                .build();
+
+        given(userMapper.deleteMe(userId)).willReturn(1);
+        given(jwtUtil.getRemainingExpirationMillis(reqDTO.getAccessToken())).willReturn(100L);
+        given(jwtUtil.getRemainingExpirationMillis(reqDTO.getRefreshToken())).willReturn(100L);
+
+        // when
+        userService.deleteMe(userId, reqDTO);
+
+        // then
+        verify(userMapper).deleteMe(userId);
+        verify(jwtUtil).getRemainingExpirationMillis("testAccessToken");
+        verify(jwtUtil).getRemainingExpirationMillis("testRefreshToken");
+        verify(redisService).saveBlacklist("testAccessToken", 100L, "testRefreshToken", 100L);
+    }
+
 }

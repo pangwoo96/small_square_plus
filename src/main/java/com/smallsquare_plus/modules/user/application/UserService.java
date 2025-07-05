@@ -19,4 +19,6 @@ public interface UserService {
     UserInfoResDTO me(Long userId);
 
     UserUpdateResDTO updateMe(Long userId, UserUpdateReqDTO reqDTO);
+
+    void deleteMe(Long userId, UserLogoutReqDTO reqDTO);
 }
