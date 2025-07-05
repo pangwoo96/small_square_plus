@@ -98,11 +98,6 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.disable());
     }
 
-//    // JWT 필터 설정 추가
-//    private void configureJwtFilter(HttpSecurity http) throws Exception {
-//        http.addFilterBefore(new JwtFilter(jwtUtil),
-//                UsernamePasswordAuthenticationFilter.class);
-//    }
 
     // 인증/인가 예외 처리
     private void configureExceptionHandling(HttpSecurity http) throws Exception {

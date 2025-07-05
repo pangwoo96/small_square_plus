@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -22,4 +23,5 @@ public class UserController {
         Long userId = userService.signup(reqDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(userId);
     }
+public class UserController {
 }
