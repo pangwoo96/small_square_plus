@@ -23,5 +23,4 @@ public class UserController {
         Long userId = userService.signup(reqDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(userId);
     }
-public class UserController {
 }
