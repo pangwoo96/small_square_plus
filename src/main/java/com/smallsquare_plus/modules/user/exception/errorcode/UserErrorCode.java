@@ -25,7 +25,10 @@ public enum UserErrorCode {
     EMAIL_ALREADY_EXISTS("이미 존재하는 이메일입니다.", HttpStatus.BAD_REQUEST),
 
     NAME_NOT_NULL("이름은 필수값입니다.", HttpStatus.BAD_REQUEST),
-    NAME_WRONG_PATTERN("이름은 한글과 영어를 섞으면 안되고 최대 30자까지 작성 가능합니다.", HttpStatus.BAD_REQUEST);
+    NAME_WRONG_PATTERN("이름은 한글과 영어를 섞으면 안되고 최대 30자까지 작성 가능합니다.", HttpStatus.BAD_REQUEST),
+
+    ACCESS_TOKEN_EXPIRED("Access Token이 만료되었습니다.", HttpStatus.BAD_REQUEST),
+    REFRESH_TOKEN_EXPIRED("Refresh Token이 만료되었습니다.", HttpStatus.BAD_REQUEST);
 
     private final String message;
     private final HttpStatus status;
