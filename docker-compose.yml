@@ -10,6 +10,7 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes:
       - ./db/initdb.d:/docker-entrypoint-initdb.d
+      - ./db/data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     restart: unless-stopped
@@ -25,3 +26,6 @@ services:
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  postgres-data:
