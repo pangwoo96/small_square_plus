@@ -2,10 +2,14 @@ package com.smallsquare_plus.modules.user.infrastructure.mapper;
 
 import com.smallsquare_plus.modules.user.domain.entity.User;
 import com.smallsquare_plus.modules.user.domain.enums.Role;
+import com.smallsquare_plus.modules.user.web.dto.request.UserUpdateReqDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface UserMapper {
+
+    User getUserInfoByUserId(Long userId);
 
     Long createUser(User user);
 
@@ -21,5 +25,5 @@ public interface UserMapper {
 
     Role getRoleByUserId(Long userId);
 
-    User getUserInfoByUserId(Long userId);
+    int updateUserInfo(@Param("userId") Long userId, @Param("reqDTO") UserUpdateReqDTO reqDTO);
 }

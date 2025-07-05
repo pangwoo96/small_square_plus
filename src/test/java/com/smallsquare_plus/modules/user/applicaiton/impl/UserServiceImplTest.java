@@ -12,8 +12,10 @@ import com.smallsquare_plus.modules.user.utils.UserUtils;
 import com.smallsquare_plus.modules.user.web.dto.request.UserLoginReqDTO;
 import com.smallsquare_plus.modules.user.web.dto.request.UserLogoutReqDTO;
 import com.smallsquare_plus.modules.user.web.dto.request.UserSignupReqDTO;
+import com.smallsquare_plus.modules.user.web.dto.request.UserUpdateReqDTO;
 import com.smallsquare_plus.modules.user.web.dto.response.UserInfoResDTO;
 import com.smallsquare_plus.modules.user.web.dto.response.UserLoginResDTO;
+import com.smallsquare_plus.modules.user.web.dto.response.UserUpdateResDTO;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -55,6 +57,21 @@ public class UserServiceImplTest {
 
     @Mock
     private RedisService redisService;
+
+    private User createUser(long userId) {
+        return User.builder()
+                .userId(userId)
+                .username("testUsername")
+                .password("testPassword")
+                .nickname("testNickname")
+                .email("testEmail@example.com")
+                .name("testName")
+                .isActive(IsActive.ACTIVE)
+                .role(Role.USER)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+    }
 
     @Test
     @Order(1)
@@ -136,18 +153,7 @@ public class UserServiceImplTest {
     void 내_정보_조회_성공() {
         // given
         long userId = 1L;
-        User mockUser = User.builder()
-                .userId(userId)
-                .username("testUsername")
-                .password("testPassword")
-                .nickname("testNickname")
-                .email("testEmail@example.com")
-                .name("testName")
-                .isActive(IsActive.ACTIVE)
-                .role(Role.USER)
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
+        User mockUser = createUser(userId);
 
         given(userMapper.getUserInfoByUserId(userId)).willReturn(mockUser);
 
@@ -165,6 +171,62 @@ public class UserServiceImplTest {
         assertThat(resDTO.getName()).isEqualTo("testName");
         assertThat(resDTO.getIsActive()).isEqualTo(IsActive.ACTIVE);
         assertThat(resDTO.getRole()).isEqualTo(Role.USER);
+    }
+
+    @Test
+    @Order(5)
+    void 내_정보_수정_성공() {
+
+        //given
+        long userId = 1L;
+        UserUpdateReqDTO reqDTO = UserUpdateReqDTO.builder()
+                .username("newUsername")
+                .nickname("newNickname")
+                .email("newEmail@example.com")
+                .name("newName")
+                .build();
+
+        User existingUser = User.builder()
+                .userId(userId)
+                .username("oldUser")
+                .nickname("oldNick")
+                .email("old@example.com")
+                .name("oldName")
+                .isActive(IsActive.ACTIVE)
+                .role(Role.USER)
+                .createdAt(LocalDateTime.now().minusDays(10))
+                .updatedAt(LocalDateTime.now().minusDays(5))
+                .build();
+
+        User updatedUser = User.builder()
+                .userId(userId)
+                .username(reqDTO.getUsername())
+                .nickname(reqDTO.getNickname())
+                .email(reqDTO.getEmail())
+                .name(reqDTO.getName())
+                .isActive(IsActive.ACTIVE)
+                .role(Role.USER)
+                .createdAt(existingUser.getCreatedAt())
+                .updatedAt(LocalDateTime.now()) // updated time은 다르게
+                .build();
+
+
+        given(userMapper.updateUserInfo(userId, reqDTO)).willReturn(1);
+        given(userMapper.getUserInfoByUserId(userId)).willReturn(updatedUser);
+
+        //when
+        UserUpdateResDTO resDTO = userService.updateMe(userId, reqDTO);
+
+        //then
+        verify(userUtils).validateUsername(reqDTO.getUsername());
+        verify(userUtils).validateNickname(reqDTO.getNickname());
+        verify(userUtils).validateEmail(reqDTO.getEmail());
+        verify(userUtils).validateName(reqDTO.getName());
+
+        assertThat(resDTO.getUsername()).isEqualTo(reqDTO.getUsername());
+        assertThat(resDTO.getNickname()).isEqualTo(reqDTO.getNickname());
+        assertThat(resDTO.getEmail()).isEqualTo(reqDTO.getEmail());
+        assertThat(resDTO.getName()).isEqualTo(reqDTO.getName());
     }
 
 }
