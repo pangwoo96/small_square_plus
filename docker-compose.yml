@@ -5,7 +5,7 @@ services:
     env_file:
       - .env
     environment:
-      - POSTGRES_DB=small_sqaure_plus_db
+      - POSTGRES_DB=small_square_plus_db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
