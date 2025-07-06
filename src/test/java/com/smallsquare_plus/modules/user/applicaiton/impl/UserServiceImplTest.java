@@ -9,10 +9,8 @@ import com.smallsquare_plus.modules.user.infrastructure.jwt.JwtUtil;
 import com.smallsquare_plus.modules.user.infrastructure.mapper.UserMapper;
 import com.smallsquare_plus.modules.user.infrastructure.redis.RedisService;
 import com.smallsquare_plus.modules.user.utils.UserUtils;
-import com.smallsquare_plus.modules.user.web.dto.request.UserLoginReqDTO;
-import com.smallsquare_plus.modules.user.web.dto.request.UserLogoutReqDTO;
-import com.smallsquare_plus.modules.user.web.dto.request.UserSignupReqDTO;
-import com.smallsquare_plus.modules.user.web.dto.request.UserUpdateReqDTO;
+import com.smallsquare_plus.modules.user.web.dto.request.*;
+import com.smallsquare_plus.modules.user.web.dto.response.RefreshTokenResDTO;
 import com.smallsquare_plus.modules.user.web.dto.response.UserInfoResDTO;
 import com.smallsquare_plus.modules.user.web.dto.response.UserLoginResDTO;
 import com.smallsquare_plus.modules.user.web.dto.response.UserUpdateResDTO;
@@ -254,6 +252,34 @@ public class UserServiceImplTest {
         verify(jwtUtil).getRemainingExpirationMillis("testAccessToken");
         verify(jwtUtil).getRemainingExpirationMillis("testRefreshToken");
         verify(redisService).saveBlacklist("testAccessToken", 100L, "testRefreshToken", 100L);
+    }
+
+    @Test
+    @Order(7)
+    void 토큰_재발급() {
+
+        // given
+        RefreshTokenReqDTO reqDTO = RefreshTokenReqDTO.builder()
+                .refreshToken("testRefreshToken")
+                .build();
+
+        Long userId = 1L;
+        User user = createUser(userId);
+
+        given(userMapper.getUserInfoByUserId(userId)).willReturn(user);
+        given(jwtProvider.createAccessToken(user.getUserId(), user.getName(), user.getRole())).willReturn("testAccessToken");
+        given(jwtProvider.createRefreshToken(user.getUserId(), user.getName(), user.getRole())).willReturn("testRefreshToken");
+
+        // when
+        RefreshTokenResDTO resDTO = userService.refreshToken(userId, reqDTO);
+
+        // then
+        assertThat(resDTO.getAccessToken()).isEqualTo("testAccessToken");
+        assertThat(resDTO.getRefreshToken()).isEqualTo("testRefreshToken");
+
+        verify(jwtUtil).validateToken(reqDTO.getRefreshToken());
+        verify(jwtUtil).validateRefreshTokenBlackList(reqDTO.getRefreshToken());
+        verify(userUtils).validateUserIsActive(user.getIsActive());
     }
 
 }
