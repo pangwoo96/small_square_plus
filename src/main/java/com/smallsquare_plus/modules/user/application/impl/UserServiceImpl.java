@@ -10,6 +10,7 @@ import com.smallsquare_plus.modules.user.infrastructure.mapper.UserMapper;
 import com.smallsquare_plus.modules.user.infrastructure.redis.RedisService;
 import com.smallsquare_plus.modules.user.utils.UserUtils;
 import com.smallsquare_plus.modules.user.web.dto.request.*;
+import com.smallsquare_plus.modules.user.web.dto.response.RefreshTokenResDTO;
 import com.smallsquare_plus.modules.user.web.dto.response.UserInfoResDTO;
 import com.smallsquare_plus.modules.user.web.dto.response.UserLoginResDTO;
 import com.smallsquare_plus.modules.user.web.dto.response.UserUpdateResDTO;
@@ -156,6 +157,31 @@ public class UserServiceImpl implements UserService {
 
         // 3. logout 호출
         logout(reqDTO);
+    }
+
+    @Override
+    @Transactional
+    public RefreshTokenResDTO refreshToken(Long userId, RefreshTokenReqDTO reqDTO) {
+
+        // 1. 토큰 검증
+        jwtUtil.validateToken(reqDTO.getRefreshToken());
+        jwtUtil.validateRefreshTokenBlackList(reqDTO.getRefreshToken());
+
+        // 2. 유저 검증
+        User user= userMapper.getUserInfoByUserId(userId);
+        userUtils.validateUserIsActive(user.getIsActive());
+
+        // 3. 블랙리스트
+        redisService.saveRefreshBlackList(reqDTO.getRefreshToken(), jwtUtil.getRemainingExpirationMillis(reqDTO.getRefreshToken()));
+
+        // 4. 토큰 생성
+        String accessToken = jwtProvider.createAccessToken(user.getUserId(), user.getName(), user.getRole());
+        String refreshToken = jwtProvider.createRefreshToken(user.getUserId(), user.getName(), user.getRole());
+
+        return RefreshTokenResDTO.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
 }

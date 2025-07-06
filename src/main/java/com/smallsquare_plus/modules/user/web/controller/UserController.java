@@ -2,11 +2,9 @@ package com.smallsquare_plus.modules.user.web.controller;
 
 import com.smallsquare_plus.modules.user.application.UserService;
 import com.smallsquare_plus.modules.user.infrastructure.auth.model.CustomUserDetails;
-import com.smallsquare_plus.modules.user.web.dto.request.UserUpdateReqDTO;
+import com.smallsquare_plus.modules.user.web.dto.request.*;
+import com.smallsquare_plus.modules.user.web.dto.response.RefreshTokenResDTO;
 import com.smallsquare_plus.modules.user.web.dto.response.UserInfoResDTO;
-import com.smallsquare_plus.modules.user.web.dto.request.UserLoginReqDTO;
-import com.smallsquare_plus.modules.user.web.dto.request.UserLogoutReqDTO;
-import com.smallsquare_plus.modules.user.web.dto.request.UserSignupReqDTO;
 import com.smallsquare_plus.modules.user.web.dto.response.UserLoginResDTO;
 import com.smallsquare_plus.modules.user.web.dto.response.UserUpdateResDTO;
 import lombok.RequiredArgsConstructor;
@@ -58,5 +56,11 @@ public class UserController {
     public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody UserLogoutReqDTO reqDTO) {
         userService.deleteMe(userDetails.getUserId(), reqDTO);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<RefreshTokenResDTO> refreshToken(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody RefreshTokenReqDTO reqDTO) {
+        RefreshTokenResDTO resDTO = userService.refreshToken(userDetails.getUserId(), reqDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(resDTO);
     }
 }
