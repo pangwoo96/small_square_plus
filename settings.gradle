@@ -1,1 +1,2 @@
 rootProject.name = 'smallsquare_plus'
+include 'backend'
