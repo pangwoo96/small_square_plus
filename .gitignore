@@ -1,11 +1,28 @@
-HELP.md
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
+# === Backend ===
+/backend/build/
+/backend/.gradle/
+/backend/out/
+/backend/.env
 
-### STS ###
+# === Frontend ===
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.env
+
+# === IDEs and Editors ===
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.DS_Store
+
+# === Build and Cache ===
+bin/
+out/
+build/
+
+# === Spring Tools Suite ===
 .apt_generated
 .classpath
 .factorypath
@@ -13,34 +30,10 @@ build/
 .settings
 .springBeans
 .sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
-### VS Code ###
-.vscode/
-
-### .env ###
-.env
-
-### db ###
-db/
-
-### postgreSQL ###
-postgres-data/
+# === NetBeans ===
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
