@@ -7,10 +7,14 @@
     <button @click="goToLogin">로그인</button>
     <button @click="goToSignup">회원가입</button>
   </div>
+  <div>
+    <Dropdown/>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { useRouter } from "vue-router";
+import Dropdown from'@/pages/components/Dropdown.vue'
 const router = useRouter();
 
 const goToLogin = () => {
