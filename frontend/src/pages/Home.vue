@@ -8,13 +8,14 @@
     <button @click="goToSignup">회원가입</button>
   </div>
   <div>
-    <Dropdown/>
+    <button @click="goToBoard">게시판</button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import Dropdown from'@/pages/components/Dropdown.vue'
+import Dropdown from '@/components/board/Dropdown.vue'
+import DropZone from "@/components/board/DropZone.vue";
 const router = useRouter();
 
 const goToLogin = () => {
@@ -23,6 +24,10 @@ const goToLogin = () => {
 
 const goToSignup = () => {
   router.push("/signup") // url
+}
+
+const goToBoard = () => {
+  router.push("/board")
 }
 
 </script>

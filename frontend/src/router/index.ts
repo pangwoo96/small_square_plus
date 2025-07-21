@@ -4,6 +4,7 @@ import Home from '@/pages/Home.vue'
 import LoginView from "@/pages/user/LoginView.vue";
 import SignupForm from "@/components/user/SignupForm.vue";
 import SignupView from "@/pages/user/SignupView.vue";
+import BoardView from "@/pages/board/BoardView.vue";
 
 const routes = [
     {
@@ -20,7 +21,12 @@ const routes = [
         path: '/signup',
         name: "Signup",
         component: SignupView
-    }
+    },
+    {
+        path: '/board',
+        name: "Board",
+        component: BoardView
+    },
 ]
 
 const router = createRouter({
